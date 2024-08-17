@@ -1,4 +1,5 @@
 const express = require("express");
+const helper = require("./validityHelper");
 const app = express();
 
 app.use(express.json());
@@ -61,20 +62,18 @@ app.delete("/api/persons/:id", (request, response) => {
 //add
 app.post("/api/persons", (request, response) => {
   const body = request.body;
-
-  if (!body.name) {
+  const validityCheck = helper.checkParamPresence(body);
+  if (!validityCheck.valid) {
     return response.status(400).json({
-      error: "missing name",
+      error: `missing: ${validityCheck.message}`,
     });
   }
-  if (!body.surname) {
+  const alreadyExist = persons.find(
+    (person) => person.name === body.name && person.surname === body.surname
+  );
+  if (alreadyExist) {
     return response.status(400).json({
-      error: "missing surname",
-    });
-  }
-  if (!body.number) {
-    return response.status(400).json({
-      error: "missing number , ",
+      error: "name and surname should be unique",
     });
   }
   const person = {
@@ -86,6 +85,7 @@ app.post("/api/persons", (request, response) => {
   persons = persons.concat(person);
   response.json(person);
 });
+
 //get info
 app.get("/info", (request, response) => {
   const message = `Phonebook has info for ${
