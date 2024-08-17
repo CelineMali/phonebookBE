@@ -31,14 +31,7 @@ let persons = [
 ];
 
 const generateId = () => {
-  const maxId =
-    persons.length > 0
-      ? persons.reduce((acc, current) => {
-          acc = acc > Number(current.id) ? acc : Number(current.id);
-          return acc;
-        }, 0)
-      : 0;
-  return String(maxId + 1);
+  return String(Math.floor(Math.random() * 10000));
 };
 
 // get all persons
