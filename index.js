@@ -93,6 +93,14 @@ app.post("/api/persons", (request, response) => {
   persons = persons.concat(person);
   response.json(person);
 });
+//get info
+app.get("/info", (request, response) => {
+  const message = `Phonebook has info for ${
+    persons.length
+  } people <br/> <br/> ${new Date()}`;
+  response.set("Content-Type", "text/html");
+  response.send(message);
+});
 
 const PORT = 3001;
 app.listen(PORT);
