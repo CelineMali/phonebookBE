@@ -1,8 +1,31 @@
 const express = require("express");
+const morgan = require("morgan");
 const helper = require("./validityHelper");
 const app = express();
 
 app.use(express.json());
+
+app.use(
+  morgan(
+    ":method :url :status :res[content-length] - :response-time ms :postOnly ",
+    {
+      skip: function (req) {
+        return req.method !== "POST";
+      },
+    }
+  )
+);
+app.use(
+  morgan("tiny", {
+    skip: function (req) {
+      return req.method === "POST";
+    },
+  })
+);
+
+morgan.token("postOnly", function (req) {
+  return JSON.stringify(req.body);
+});
 
 let persons = [
   {
@@ -86,7 +109,9 @@ app.post("/api/persons", (request, response) => {
   response.json(person);
 });
 
-//get info
+/**
+ * Provide info about phonebook entries number and request time
+ */
 app.get("/info", (request, response) => {
   const message = `Phonebook has info for ${
     persons.length

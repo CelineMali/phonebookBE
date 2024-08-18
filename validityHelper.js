@@ -15,9 +15,4 @@ module.exports = {
     });
     return { valid: !missingField.length, message: missingField.trim() };
   },
-  bar: function () {
-    // whatever
-  },
 };
-
-var zemba = function () {};
