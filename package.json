@@ -2,7 +2,7 @@
   "scripts": {
     "start": "node index.js",
     "nodemon": "nodemon index.js",
-    "build:ui": "rm -rf dist && cd ../media/feline/Disque2/DEV/react/phonebook/vite-project && npm run build && cp -r dist ../media/feline/Disque2/DEV/react/phonebookBE",
+    "build:ui": "rm -rf dist && cd ../phonebook/vite-project && npm run build && cp -r dist ../phonebookBE",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push"
   },
   "dependencies": {
