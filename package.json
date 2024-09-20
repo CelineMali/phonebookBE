@@ -3,7 +3,7 @@
     "start": "node index.js",
     "nodemon": "nodemon index.js",
     "build:ui": "rm -rf dist && cd ../phonebook/vite-project && npm run build && cp -r dist ../phonebookBE",
-    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push"
+    "deploy:full": " git add . && git commit -m uibuild && git push"
   },
   "dependencies": {
     "cors": "^2.8.5",
