@@ -1,10 +1,12 @@
+require("dotenv").config(); //tobe required first so global env const are available for other modules
 const express = require("express");
 const morgan = require("morgan");
 const helper = require("./validityHelper");
 const cors = require("cors");
-const mongoose = require("mongoose");
-require("dotenv").config();
+const Person = require("./models/person");
 const app = express();
+
+const PORT = process.env.PORT || 3001;
 
 app.use(express.json());
 app.use(cors());
@@ -33,49 +35,7 @@ morgan.token("postOnly", function (req) {
   return JSON.stringify(req.body);
 });
 
-//mongoose
-const url = process.env.MONGODB_URI;
-mongoose.set("strictQuery", false);
-mongoose.connect(url);
-
-//document object with all key/types
-const personSchema = new mongoose.Schema({
-  name: String,
-  surname: String,
-  number: Number,
-});
-
-//constructor of a Note document for a notes collection (plutal and lowercase)
-// includes the "save " function
-// is async
-const Person = mongoose.model("Person", personSchema);
-
-let persons = [
-  {
-    id: "1",
-    name: "Arto",
-    surname: "Hellas",
-    number: "040-123456",
-  },
-  {
-    id: "2",
-    name: "Ada",
-    surname: "Lovelace",
-    number: "39-44-5323523",
-  },
-  {
-    id: "3",
-    name: "Dan",
-    surname: "Abramov",
-    number: "12-43-234345",
-  },
-  {
-    id: "4",
-    name: "Mary",
-    surname: "Poppendieck",
-    number: "39-23-6423122",
-  },
-];
+let persons = [];
 
 const generateId = () => {
   return String(Math.floor(Math.random() * 10000));
@@ -145,6 +105,6 @@ app.get("/info", (request, response) => {
   response.send(message);
 });
 
-const PORT = process.env.PORT || 3001;
-app.listen(PORT);
-console.log(`Server running on port ${PORT}`);
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
