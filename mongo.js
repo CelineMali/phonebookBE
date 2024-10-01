@@ -1,20 +1,12 @@
-const mongoose = require("mongoose");
-
-const password = process.argv[2];
-const url = `mongodb+srv://celinedb:${password}@celinedb.cnhm7.mongodb.net/phonebookApp?retryWrites=true&w=majority&appName=celinedb`;
 //`mongodb+srv://fullstack:${password}@celinedb.o1opl.mongodb.net/?retryWrites=true&w=majority`;
 //
 /**
  * When the code is run with the command node mongo.js yourPassword, Mongo will add a new document to the database.
  * argv:command to access node args. 
- * argv= [process.execPath, file path, other argspassed to the command]
+ * argv= [process.execPath, file path, other args passed to the command]
  ex: node mongo.js toto => [  /usr/local/bin/node, /Users/mjr/work/node/mongo.js,  toto]
  * 
  */
-
-mongoose.set("strictQuery", false);
-
-mongoose.connect(url);
 
 //document object with all key/types
 const personSchema = new mongoose.Schema({

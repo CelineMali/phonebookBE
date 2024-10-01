@@ -2,12 +2,15 @@ const express = require("express");
 const morgan = require("morgan");
 const helper = require("./validityHelper");
 const cors = require("cors");
+const mongoose = require("mongoose");
+require("dotenv").config();
 const app = express();
 
 app.use(express.json());
 app.use(cors());
 app.use(express.static("dist"));
 
+//morgan
 app.use(
   morgan(
     ":method :url :status :res[content-length] - :response-time ms :postOnly ",
@@ -29,6 +32,23 @@ app.use(
 morgan.token("postOnly", function (req) {
   return JSON.stringify(req.body);
 });
+
+//mongoose
+const url = process.env.MONGODB_URI;
+mongoose.set("strictQuery", false);
+mongoose.connect(url);
+
+//document object with all key/types
+const personSchema = new mongoose.Schema({
+  name: String,
+  surname: String,
+  number: Number,
+});
+
+//constructor of a Note document for a notes collection (plutal and lowercase)
+// includes the "save " function
+// is async
+const Person = mongoose.model("Person", personSchema);
 
 let persons = [
   {
@@ -63,7 +83,9 @@ const generateId = () => {
 
 // get all persons
 app.get("/api/persons", (request, response) => {
-  response.json(persons);
+  Person.find({}).then((persons) => {
+    response.json(persons);
+  });
 });
 
 // get a single person
