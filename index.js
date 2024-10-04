@@ -51,13 +51,14 @@ app.get("/api/persons", (request, response) => {
 // get a single person
 app.get("/api/persons/:id", (request, response) => {
   const id = request.params.id;
-  const person = persons.find((person) => person.id === id);
-  if (person) {
-    response.json(person);
-  } else {
-    response.statusMessage = "No person found";
-    response.status(404).end();
-  }
+  Person.findById(id).then((person) => {
+    if (person) {
+      response.json(person);
+    } else {
+      response.statusMessage = "No person found";
+      response.status(404).end();
+    }
+  });
 });
 //delete
 app.delete("/api/persons/:id", (request, response) => {
@@ -76,22 +77,21 @@ app.post("/api/persons", (request, response) => {
       error: `missing: ${validityCheck.message}`,
     });
   }
-  const alreadyExist = persons.find(
-    (person) => person.name === body.name && person.surname === body.surname
-  );
-  if (alreadyExist) {
-    return response.status(400).json({
-      error: "name and surname should be unique",
-    });
-  }
-  const person = {
+  // const alreadyExist = persons.find(
+  //   (person) => person.name === body.name && person.surname === body.surname
+  // );
+  // if (alreadyExist) {
+  //   return response.status(400).json({
+  //     error: "name and surname should be unique",
+  //   });
+  // }
+  const person = new Person({
     name: body.name,
     number: body.number,
     id: generateId(),
-  };
+  });
 
-  persons = persons.concat(person);
-  response.json(person);
+  person.save().then((savedNote) => response.json(savedNote));
 });
 
 /**
