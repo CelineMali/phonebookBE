@@ -7,10 +7,9 @@ const Person = require("./models/person");
 const app = express();
 
 const PORT = process.env.PORT || 3001;
-
+app.use(express.static("dist"));
 app.use(express.json());
 app.use(cors());
-app.use(express.static("dist"));
 
 //morgan
 app.use(
@@ -31,6 +30,18 @@ app.use(
   })
 );
 
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message);
+
+  if (error.name === "CastError") {
+    return response.status(400).send({ error: "malformatted id" });
+  }
+
+  next(error);
+};
+// this has to be the last loaded middleware, also all the routes should be registered before this!
+app.use(errorHandler);
+
 morgan.token("postOnly", function (req) {
   return JSON.stringify(req.body);
 });
@@ -49,23 +60,50 @@ app.get("/api/persons", (request, response) => {
 });
 
 // get a single person
-app.get("/api/persons/:id", (request, response) => {
+app.get("/api/persons/:id", (request, response, next) => {
   const id = request.params.id;
-  Person.findById(id).then((person) => {
-    if (person) {
-      response.json(person);
-    } else {
-      response.statusMessage = "No person found";
-      response.status(404).end();
-    }
-  });
+  Person.findById(id)
+    .then((person) => {
+      if (person) {
+        response.json(person);
+      } else {
+        response.statusMessage = "No person found";
+        response.status(404).end();
+      }
+    })
+    .catch((e) => {
+      console.log("error", e);
+      next(e);
+    });
 });
 //delete
 app.delete("/api/persons/:id", (request, response) => {
   const id = request.params.id;
-  persons = persons.filter((person) => person.id !== id);
+  Person.findByIdAndDelete(id)
+    .then((result) => {
+      //@todo check result to handle wrong id
+      response.status(204).end();
+    })
+    .catch((error) => next(error));
+});
 
-  response.status(204).end();
+//update
+app.put("/api/persons/:id", (request, response, next) => {
+  const id = request.params.id;
+  const person = request.body;
+
+  const options = {
+    new: true, // return the modified document rather than the original
+    upsert: true, // if true, and no documents found, insert a new document
+  };
+  return Person.findByIdAndUpdate(id, person, options)
+    .then((updatedPerson) => {
+      return response.json(updatedPerson);
+    })
+    .catch((e) => {
+      console.log("update error", e);
+      next(e);
+    });
 });
 
 //add
