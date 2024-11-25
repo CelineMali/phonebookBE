@@ -46,12 +46,6 @@ morgan.token("postOnly", function (req) {
   return JSON.stringify(req.body);
 });
 
-let persons = [];
-
-const generateId = () => {
-  return String(Math.floor(Math.random() * 10000));
-};
-
 // get all persons
 app.get("/api/persons", (request, response) => {
   Person.find({}).then((persons) => {
@@ -107,7 +101,7 @@ app.put("/api/persons/:id", (request, response, next) => {
 });
 
 //add
-app.post("/api/persons", (request, response) => {
+app.put("/api/persons", (request, response) => {
   const body = request.body;
   const validityCheck = helper.checkParamPresence(body);
   if (!validityCheck.valid) {
@@ -115,32 +109,37 @@ app.post("/api/persons", (request, response) => {
       error: `missing: ${validityCheck.message}`,
     });
   }
-  // const alreadyExist = persons.find(
-  //   (person) => person.name === body.name && person.surname === body.surname
-  // );
-  // if (alreadyExist) {
-  //   return response.status(400).json({
-  //     error: "name and surname should be unique",
-  //   });
-  // }
-  const person = new Person({
-    name: body.name,
-    number: body.number,
-    id: generateId(),
-  });
 
-  person.save().then((savedNote) => response.json(savedNote));
+  const options = {
+    new: true, // return the modified document rather than the original
+    upsert: true, // if true, and no documents found, insert a new document
+  };
+  const { name, surname, number } = body;
+  const query = { name, surname };
+  const update = { $set: { name, surname, number } };
+  return Person.updateOne(query, update, options)
+    .then((updatedPerson) => {
+      return response.json(updatedPerson);
+    })
+    .catch((e) => {
+      console.log("update error", e);
+      next(e);
+    });
 });
 
 /**
  * Provide info about phonebook entries number and request time
  */
-app.get("/info", (request, response) => {
-  const message = `Phonebook has info for ${
-    persons.length
-  } people <br/> <br/> ${new Date()}`;
-  response.set("Content-Type", "text/html");
-  response.send(message);
+//TODO Count Documents NOT WORKING
+app.get("/api/persons/info", (request, response) => {
+  return Person.countDocuments(request, { hint: "name" }).then(() => {
+    console.log(response);
+  });
+  // const message = `Phonebook has info for ${
+  //   persons.length
+  // } people <br/> <br/> ${new Date()}`;
+  // response.set("Content-Type", "text/html");
+  // response.send(message);s
 });
 
 app.listen(PORT, () => {
