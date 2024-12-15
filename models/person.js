@@ -14,9 +14,9 @@ mongoose
 
 //document object with all key/types
 const personSchema = new mongoose.Schema({
-  name: String,
-  surname: String,
-  number: Number,
+  name: { type: String, required: true, minLength: 3 },
+  surname: { type: String, required: true, minLength: 3 },
+  number: { type: Number, required: true },
 });
 personSchema.set("toJSON", {
   transform: (document, returnedObject) => {

@@ -9,7 +9,7 @@ module.exports = {
     let missingField = "";
 
     required.map((req) => {
-      if (body[req] === "") {
+      if (body[req] === "" || body[req] === null || !body[req]) {
         missingField += req + " ";
       }
     });

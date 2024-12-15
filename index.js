@@ -32,11 +32,12 @@ app.use(
 
 const errorHandler = (error, request, response, next) => {
   console.error(error.message);
-
   if (error.name === "CastError") {
     return response.status(400).send({ error: "malformatted id" });
   }
-
+  if (error.name === "ValidationError") {
+    return response.status(400).json({ error: error.message });
+  }
   next(error);
 };
 // this has to be the last loaded middleware, also all the routes should be registered before this!
@@ -56,6 +57,7 @@ app.get("/api/persons", (request, response) => {
 // get a single person
 app.get("/api/persons/:id", (request, response, next) => {
   const id = request.params.id;
+  //sur postman, mettre directement l'id ds l'url de la requete
   Person.findById(id)
     .then((person) => {
       if (person) {
@@ -89,6 +91,8 @@ app.put("/api/persons/:id", (request, response, next) => {
   const options = {
     new: true, // return the modified document rather than the original
     upsert: true, // if true, and no documents found, insert a new document
+    runValidators: true, //validation not run in findById and update. Need to precise context too.
+    context: "query",
   };
   return Person.findByIdAndUpdate(id, person, options)
     .then((updatedPerson) => {
@@ -109,10 +113,10 @@ app.put("/api/persons", (request, response) => {
       error: `missing: ${validityCheck.message}`,
     });
   }
-
   const options = {
     new: true, // return the modified document rather than the original
     upsert: true, // if true, and no documents found, insert a new document
+    runValidators: true,
   };
   const { name, surname, number } = body;
   const query = { name, surname };
