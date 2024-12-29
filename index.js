@@ -51,6 +51,7 @@ morgan.token("postOnly", function (req) {
 app.get("/api/persons", (request, response) => {
   Person.find({})
     .then((persons) => {
+      console.log("toto je passe là");
       if (persons) {
         response.json(persons);
       } else {
