@@ -49,6 +49,7 @@ morgan.token("postOnly", function (req) {
 
 // get all persons
 app.get("/api/persons", (request, response) => {
+  console.log("toto");
   Person.find({})
     .then((persons) => {
       console.log("toto je passe là");
