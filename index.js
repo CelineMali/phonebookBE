@@ -49,9 +49,19 @@ morgan.token("postOnly", function (req) {
 
 // get all persons
 app.get("/api/persons", (request, response) => {
-  Person.find({}).then((persons) => {
-    response.json(persons);
-  });
+  Person.find({})
+    .then((persons) => {
+      if (persons) {
+        response.json(person);
+      } else {
+        response.statusMessage = "getAll: Nobody found";
+        response.status(404).end();
+      }
+    })
+    .catch((e) => {
+      console.log("error", e);
+      next(e);
+    });
 });
 
 // get a single person
@@ -91,8 +101,8 @@ app.put("/api/persons/:id", (request, response, next) => {
   const options = {
     new: true, // return the modified document rather than the original
     upsert: true, // if true, and no documents found, insert a new document
-    runValidators: true, //validation not run in findById and update. Need to precise context too.
-    context: "query",
+    // runValidators: true, //validation not run in findById and update. Need to precise context too.
+    // context: "query",
   };
   return Person.findByIdAndUpdate(id, person, options)
     .then((updatedPerson) => {
@@ -116,7 +126,7 @@ app.put("/api/persons", (request, response) => {
   const options = {
     new: true, // return the modified document rather than the original
     upsert: true, // if true, and no documents found, insert a new document
-    runValidators: true,
+    // runValidators: true,
   };
   const { name, surname, number } = body;
   const query = { name, surname };
