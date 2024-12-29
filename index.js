@@ -52,7 +52,6 @@ app.get("/api/persons", (request, response) => {
   console.log("toto");
   Person.find({})
     .then((persons) => {
-      console.log("toto je passe là");
       if (persons) {
         response.json(persons);
       } else {
