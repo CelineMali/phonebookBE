@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
-const url = process.env.MONGODB_URI;
+const url =
+  "mongodb+srv://celinedb:passworddb@celinedb.cnhm7.mongodb.net/phonebookApp?retryWrites=true&w=majority&appName=celinedb";
 
 mongoose.set("strictQuery", false);
 mongoose
