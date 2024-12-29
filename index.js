@@ -38,6 +38,9 @@ const errorHandler = (error, request, response, next) => {
   if (error.name === "ValidationError") {
     return response.status(400).json({ error: error.message });
   }
+  if (error.name === "ValidationError") {
+    return response.status(400).json({ error: error.message });
+  }
   next(error);
 };
 // this has to be the last loaded middleware, also all the routes should be registered before this!
