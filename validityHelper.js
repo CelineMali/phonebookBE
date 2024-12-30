@@ -5,14 +5,14 @@ module.exports = {
    * @returns Object
    */
   checkParamPresence: function (body) {
-    const required = ["name", "surname", "number"];
-    let missingField = "";
+    const required = ['name', 'surname', 'number']
+    let missingField = ''
 
     required.map((req) => {
-      if (body[req] === "" || body[req] === null || !body[req]) {
-        missingField += req + " ";
+      if (body[req] === '' || body[req] === null || !body[req]) {
+        missingField += req + ' '
       }
-    });
-    return { valid: !missingField.length, message: missingField.trim() };
+    })
+    return { valid: !missingField.length, message: missingField.trim() }
   },
-};
+}
