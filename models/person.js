@@ -1,7 +1,7 @@
+require("dotenv").config();
 const mongoose = require("mongoose");
 
-const url =
-  "mongodb+srv://celinedb:passworddb@celinedb.cnhm7.mongodb.net/phonebookApp?retryWrites=true&w=majority&appName=celinedb";
+const url = process.env.MONGODB_URI;
 
 mongoose.set("strictQuery", false);
 mongoose
