@@ -2,13 +2,13 @@ require('dotenv').config()
 const mongoose = require('mongoose')
 // you need to prefix env variable with REACT_APP_ !!!
 // eslint-disable-next-line no-undef
-const url = REACT_APP_MONGODB_URI
+const url = REACT_APP_MONGODB_URI || MONGODB_URI
 
 mongoose.set('strictQuery', false)
 mongoose
   .connect(url)
   .then(() => {
-    console.log('connected to MongoDB')
+    console.warn('connected to MongoDB')
   })
   .catch((error) => {
     console.log(
