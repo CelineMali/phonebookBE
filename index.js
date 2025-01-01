@@ -106,6 +106,7 @@ app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndDelete(id)
     .then((result) => {
       //@todo check result to handle wrong id
+      console.log('toto delete', result)
       if (result) {
         response.status(204).end()
       }
