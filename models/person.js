@@ -1,8 +1,9 @@
-require('dotenv').config()
+require('dotenv').config({ path: './config.env' })
 const mongoose = require('mongoose')
 // you need to prefix env variable with REACT_APP_ !!!
-// eslint-disable-next-line no-undef
-const url = process.env.REACT_APP_MONGODB_URI || MONGODB_URI
+
+const url = process.env.REACT_APP_MONGODB_URI
+console.log('toto env', url)
 
 mongoose.set('strictQuery', false)
 mongoose
