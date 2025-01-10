@@ -107,9 +107,7 @@ app.delete('/api/persons/:id', (request, response, next) => {
     .then((result) => {
       //@todo check result to handle wrong id
       if (result) {
-        if(result.id === id) {
-          response.status(204).end()
-        }
+        response.status(204).end()
       }
     })
     .catch((error) => next(error))
@@ -153,7 +151,7 @@ app.put('/api/persons', (request, response, next) => {
   const { name, surname, number } = body
   const query = { name, surname }
   const update = { $set: { name, surname, number } }
-  return Person.updateOne(query, update, options)
+  return Person.findOneAndUpdate(query, update, options)
     .then((updatedPerson) => {
       return response.json(updatedPerson)
     })
