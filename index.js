@@ -148,7 +148,7 @@ app.put('/api/persons', (request, response, next) => {
   const { name, surname, number } = body
   const query = { name, surname }
   const update = { $set: { name, surname, number } }
-  return Person.findOneAndUpdate(query, update, options)
+  return Person.insert(query, update, options)
     .then((updatedPerson) => {
       return response.json(updatedPerson)
     })
