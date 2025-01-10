@@ -2,8 +2,10 @@ require('dotenv').config({ path: './config.env' })
 const mongoose = require('mongoose')
 // you need to prefix env variable with REACT_APP_ !!!
 
-const url = process.env.REACT_APP_MONGODB_URI
-console.log('toto env', url)
+const url = 'mongodb+srv://celinedb:passworddb@celinedb.cnhm7.mongodb.net/phonebookApp?retryWrites=true&w=majority&appName=celinedb'
+
+
+console.log('toto env', process.env)
 
 mongoose.set('strictQuery', false)
 mongoose
