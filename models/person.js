@@ -5,7 +5,7 @@ const mongoose = require('mongoose')
 const url = 'mongodb+srv://celinedb:passworddb@celinedb.cnhm7.mongodb.net/phonebookApp?retryWrites=true&w=majority&appName=celinedb'
 
 
-console.log('toto env', process.env)
+console.log('toto env', process.env.REACT_APP_MONGODB_URI)
 
 mongoose.set('strictQuery', false)
 mongoose
@@ -17,8 +17,7 @@ mongoose
     console.log(
       'error connecting to MongoDB:',
       error.message,
-      url,
-      process.env.REACT_APP_MONGODB_URI
+      url
     )
   })
 
